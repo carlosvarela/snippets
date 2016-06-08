@@ -1,0 +1,56 @@
+//Javascript Function to mask CPF and CPNJ for brazil and example to use with magento
+// Don't forget to compress or minify
+
+<script>
+function maskFunction(o,f){
+    v_obj=o
+    v_fun=f
+    setTimeout('execmascara()',1)
+}
+ 
+function execmascara(){
+    v_obj.value=v_fun(v_obj.value)
+}
+ 
+function cpfCnpj(v){
+ 
+    //Remove tudo o que não é dígito
+    v=v.replace(/\D/g,"")
+ 
+    if (v.length <= 14) { //CPF
+ 
+        //Coloca um ponto entre o terceiro e o quarto dígitos
+        v=v.replace(/(\d{3})(\d)/,"$1.$2")
+ 
+        //Coloca um ponto entre o terceiro e o quarto dígitos
+        //de novo (para o segundo bloco de números)
+        v=v.replace(/(\d{3})(\d)/,"$1.$2")
+ 
+        //Coloca um hífen entre o terceiro e o quarto dígitos
+        v=v.replace(/(\d{3})(\d{1,2})$/,"$1-$2")
+ 
+    } else { //CNPJ
+ 
+        //Coloca ponto entre o segundo e o terceiro dígitos
+        v=v.replace(/^(\d{2})(\d)/,"$1.$2")
+ 
+        //Coloca ponto entre o quinto e o sexto dígitos
+        v=v.replace(/^(\d{2})\.(\d{3})(\d)/,"$1.$2.$3")
+ 
+        //Coloca uma barra entre o oitavo e o nono dígitos
+        v=v.replace(/\.(\d{3})(\d)/,".$1/$2")
+ 
+        //Coloca um hífen depois do bloco de quatro dígitos
+        v=v.replace(/(\d{4})(\d)/,"$1-$2")
+ 
+    }
+ 
+    return v
+ 
+}//]]>
+</script>
+<!-- 
+taxvat magento
+/app/design/frontend/base/default/template/customer/widget/taxvat.phtml
+-->
+ <input type="text" id="<?php echo $this->getFieldId('taxvat')?>" name="<?php echo $this->getFieldName('taxvat')?>" value="<?php echo $this->escapeHtml($this->getTaxvat()) ?>" title="<?php echo $this->__('Tax/VAT number') ?>" class="input-text <?php echo $this->helper('customer/address')->getAttributeValidationClass('taxvat') ?>" onkeypress='maskFunction(this,cpfCnpj)' onblur='clearTimeout()' <?php echo $this->getFieldParams() ?> />

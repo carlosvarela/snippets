@@ -1,0 +1,16 @@
+How make a tab item scroll to a specific ID div after a click
+
+
+$(document).ready(function() {
+    $("#tabs-bolsa1 li").click(function (){
+        if($(this).text()=="Contatos"){
+           //    alert("success");
+
+    $('html, body').animate({
+        scrollTop: $("#contatos-info").offset().top
+    }, 2000);
+
+         };
+    });
+});
+
